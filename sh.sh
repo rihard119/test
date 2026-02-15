@@ -66,8 +66,8 @@ https://www.pornhub.com"
 for site in $sites; do
     code=$(curl -s -o /dev/null -w "%{http_code}" -A "$UA" --connect-timeout 2 --max-time 10 "$site")
 
-    # Убираем http:// и https:// из вывода
-    domain=$(echo "$site" | sed 's#^https\?://##; s#/.*##')
+    # Убираем http:// или https:// и путь
+    domain=$(echo "$site" | sed 's#^https://##; s#^http://##; s#/.*##')
 
     case "$code" in
       200|201|204|301|302|304|307|403|498)
