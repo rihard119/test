@@ -1,11 +1,10 @@
+
 #!/bin/sh
 
-# Счётчики
 success=0
 fail=0
 timeout=0
 
-# User-Agent для curl (имитация браузера)
 UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
 
 # IP и страна
@@ -14,7 +13,7 @@ country=$(curl -s https://ipinfo.io/country)
 
 printf "\nIP = %s [%s]\n\n" "$country" "$ip"
 
-# Проверка конкретного сервера RU
+# Проверка RU сервера
 ru=$(curl -s -o /dev/null -w "%{http_code}" -A "$UA" --connect-timeout 2 --max-time 10 https://51.250.90.228:20326/SLGxmxkEIQbDU9ARtm)
 
 case "$ru" in
@@ -30,7 +29,8 @@ case "$ru" in
 esac
 
 # Список сайтов
-sites="https://yandex.ru
+sites="
+https://yandex.ru
 https://dzen.ru
 https://vkvideo.ru
 https://rutube.ru
@@ -60,13 +60,15 @@ https://www.instagram.com
 https://twitter.com
 https://reddit.com
 https://wikipedia.org
-https://www.pornhub.com"
+https://www.pornhub.com
+"
 
-# Проверка каждого сайта
-for site in $sites; do
+# Перебор сайтов через while read
+echo "$sites" | while read site; do
+    [ -z "$site" ] && continue   # пропускаем пустые строки
     code=$(curl -s -o /dev/null -w "%{http_code}" -A "$UA" --connect-timeout 2 --max-time 10 "$site")
-
-    # Убираем http:// или https:// и путь
+    
+    # Получаем только домен
     domain=$(echo "$site" | sed 's#^https://##; s#^http://##; s#/.*##')
 
     case "$code" in
@@ -88,7 +90,7 @@ done
 
 # Итоги
 printf "\nТест завершен\n"
-echo "Всего сайтов: $(echo "$sites" | wc -l)"
+echo "Всего сайтов: $(echo "$sites" | grep -c '\S')"
 printf "\033[32mУспешных: %d\033[0m\n" "$success"
 printf "\033[31mНеуспешных: %d\033[0m\n" "$fail"
 echo "Таймаутов: $timeout"
