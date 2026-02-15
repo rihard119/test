@@ -18,7 +18,7 @@ ru=$(curl -s -o /dev/null -w "%{http_code}" -A "$UA" --connect-timeout 2 --max-t
 
 case "$ru" in
   200|201|204|301|302|304|307|403|498)
-    printf "\033[32mСервер RU - Доступен [%s]\033[0m\n\n" "$ru"
+    printf "\033[32mСервер RU - Доступен 1[%s]\033[0m\n\n" "$ru"
     ;;
   000)
     printf "\033[31mСервер RU - Недоступен [таймаут]\033[0m\n\n"
