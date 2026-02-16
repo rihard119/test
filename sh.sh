@@ -68,7 +68,8 @@ echo "$sites" | while read site; do
     code=$(curl -s -o /dev/null -w "%{http_code}" -A "$UA" --connect-timeout 2 --max-time 10 "$site")
     
     # Получаем только домен
-    domain=$sites
+    domain=$(echo "$site" | sed 's#^https://##; s#^http://##; s#/.*##')
+
     case "$code" in
       200|201|204|301|302|304|307|403|498)
         printf "\033[32m%s - Успешно [%s]\033[0m\n" "$domain" "$code"
