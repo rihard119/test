@@ -28,8 +28,7 @@ case "$ru" in
 esac
 
 # Список сайтов
-sites="
-https://yandex.ru
+sites="https://yandex.ru
 https://dzen.ru
 https://vkvideo.ru
 https://rutube.ru
@@ -59,14 +58,12 @@ https://www.instagram.com
 https://twitter.com
 https://reddit.com
 https://wikipedia.org
-https://www.pornhub.com
-"
+https://www.pornhub.com"
 
-# Перебор сайтов через while read
-echo "$sites" | while read site; do
-    [ -z "$site" ] && continue   # пропускаем пустые строки
+# Перебор сайтов
+for site in $sites; do
     code=$(curl -s -o /dev/null -w "%{http_code}" -A "$UA" --connect-timeout 2 --max-time 10 "$site")
-    
+
     # Получаем только домен
     domain=$(echo "$site" | sed 's#^https://##; s#^http://##; s#/.*##')
 
@@ -89,7 +86,7 @@ done
 
 # Итоги
 printf "\nТест завершен\n"
-echo "Всего сайтов: $(echo "$sites" | grep -c '\S')"
+echo "Всего сайтов: $(echo "$sites" | wc -l)"
 printf "\033[32mУспешных: %d\033[0m\n" "$success"
 printf "\033[31mНеуспешных: %d\033[0m\n" "$fail"
 echo "Таймаутов: $timeout"
